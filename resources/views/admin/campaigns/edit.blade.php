@@ -64,8 +64,11 @@
                     <div class="flex items-center justify-between rounded-lg border border-white/10 bg-slate-950/40 px-4 py-3 text-sm">
                         <div>
                             <p class="font-medium">{{ $donation->donor_name }}</p>
+                            @if ($donation->donor_alias_name && $donation->donor_real_name)
+                                <p class="text-xs text-slate-500">Real name: {{ $donation->donor_real_name }}</p>
+                            @endif
                             <p class="text-xs text-slate-400">
-                                {{ $donation->donor_mobile ?: 'No mobile' }} · {{ $donation->created_at->format('d M Y, H:i') }}
+                                {{ $donation->donor_mobile ?: 'No mobile' }} | {{ $donation->created_at->format('d M Y, H:i') }}
                             </p>
                         </div>
                         <span class="text-emerald-200">RM {{ number_format($donation->amount, 2) }}</span>

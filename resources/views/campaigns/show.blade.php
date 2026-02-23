@@ -41,7 +41,7 @@
                     <form class="mt-4 space-y-4" method="post" action="{{ route('campaigns.donate', $campaign) }}">
                         @csrf
                         <div>
-                            <label class="text-xs text-slate-400">Name</label>
+                            <label class="text-xs text-slate-400">Full Name</label>
                             <input
                                 type="text"
                                 name="donor_name"
@@ -49,6 +49,16 @@
                                 class="mt-2 w-full rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-sm"
                                 required
                             />
+                        </div>
+                        <div>
+                            <label class="text-xs text-slate-400">Nama Samaran (optional)</label>
+                            <input
+                                type="text"
+                                name="donor_alias_name"
+                                value="{{ old('donor_alias_name', $donorAliasName) }}"
+                                class="mt-2 w-full rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-sm"
+                            />
+                            <p class="mt-1 text-xs text-slate-500">If filled, this name will be shown publicly instead of your real name.</p>
                         </div>
                         <div>
                             <label class="text-xs text-slate-400">Mobile (optional)</label>

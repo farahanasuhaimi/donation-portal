@@ -14,7 +14,10 @@ class Donation extends Model
 
     protected $fillable = [
         'campaign_id',
+        'donor_user_id',
         'donor_name',
+        'donor_real_name',
+        'donor_alias_name',
         'donor_mobile',
         'amount',
         'created_at',

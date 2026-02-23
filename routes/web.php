@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\CampaignController as AdminCampaignController;
+use App\Http\Controllers\Auth\DonorAuthController;
+use App\Http\Controllers\Auth\DonorGoogleAuthController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\Organizer\AuthController as OrganizerAuthController;
@@ -11,6 +13,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [CampaignController::class, 'index'])->name('campaigns.index');
 Route::get('/campaign/{campaign}', [CampaignController::class, 'show'])->name('campaigns.show');
 Route::post('/campaign/{campaign}/donate', [DonationController::class, 'store'])->name('campaigns.donate');
+
+Route::get('/login', [DonorAuthController::class, 'showLogin'])->name('donor.login');
+Route::post('/login', [DonorAuthController::class, 'login'])->name('donor.login.submit');
+Route::get('/register', [DonorAuthController::class, 'showRegister'])->name('donor.register');
+Route::post('/register', [DonorAuthController::class, 'register'])->name('donor.register.submit');
+Route::post('/logout', [DonorAuthController::class, 'logout'])->name('donor.logout');
+Route::get('/auth/google/redirect', [DonorGoogleAuthController::class, 'redirect'])->name('donor.google.redirect');
+Route::get('/auth/google/callback', [DonorGoogleAuthController::class, 'callback'])->name('donor.google.callback');
 
 Route::get('/admin/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
 Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login.submit');

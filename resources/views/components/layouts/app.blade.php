@@ -26,7 +26,15 @@
                                 @csrf
                                 <button type="submit" class="hover:text-white">Logout</button>
                             </form>
+                        @elseif (auth()->check())
+                            <span class="text-slate-400">Hi, {{ auth()->user()->name }}</span>
+                            <form method="post" action="{{ route('donor.logout') }}">
+                                @csrf
+                                <button type="submit" class="hover:text-white">Logout</button>
+                            </form>
                         @else
+                            <a href="{{ route('donor.login') }}" class="hover:text-white">Donor Login</a>
+                            <a href="{{ route('donor.register') }}" class="hover:text-white">Donor Register</a>
                             <a href="{{ route('organizer.login') }}" class="hover:text-white">Organizer Login</a>
                             <a href="{{ route('admin.login') }}" class="hover:text-white">Admin Login</a>
                         @endif
