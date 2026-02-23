@@ -22,12 +22,14 @@ class CampaignController extends Controller
             ->withSum('donations', 'amount')
             ->when(
                 $role === 'organizer',
-                fn ($query) => $query->where('organizer_user_id', $userId)
+                fn ($query) => $query
+                    ->where('organizer_user_id', $userId)
+                    ->whereNull('archived_at')
             )
             ->orderByDesc('created_at')
             ->get();
 
-        return view('admin.campaigns.index', compact('campaigns'));
+        return view('admin.campaigns.index', compact('campaigns', 'role'));
     }
 
     public function create()
@@ -112,10 +114,33 @@ class CampaignController extends Controller
             ->with('status', 'Campaign updated.');
     }
 
+    public function destroy(Request $request, Campaign $campaign)
+    {
+        $this->authorizeCampaign($request, $campaign);
+
+        if ($campaign->isArchived()) {
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('status', 'Campaign is already archived.');
+        }
+
+        $campaign->archived_at = now();
+        $campaign->archived_by_user_id = $request->user()?->id;
+        $campaign->save();
+
+        return redirect()
+            ->route('admin.dashboard')
+            ->with('status', 'Campaign moved to archive.');
+    }
+
     private function authorizeCampaign(Request $request, Campaign $campaign): void
     {
         $role = (string) ($request->session()->get('auth_role') ?: $request->user()?->role);
         $userId = $request->user()?->id;
+
+        if ($role === 'organizer' && $campaign->isArchived()) {
+            abort(403, 'Archived campaigns are only visible to admin.');
+        }
 
         if ($role === 'organizer' && (! $userId || (int) $campaign->organizer_user_id !== (int) $userId)) {
             abort(403, 'You can only manage campaigns you created.');

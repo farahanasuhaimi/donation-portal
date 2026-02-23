@@ -17,9 +17,13 @@
                         <h2 class="text-xl font-semibold">{{ $campaign->title }}</h2>
                         <p class="mt-2 text-sm text-slate-300">{{ \Illuminate\Support\Str::limit($campaign->description, 140) }}</p>
                     </div>
-                    <span class="rounded-full px-3 py-1 text-xs {{ $campaign->isActive() ? 'bg-emerald-500/20 text-emerald-200' : 'bg-rose-500/20 text-rose-200' }}">
-                        {{ $campaign->isActive() ? 'Active' : 'Closed' }}
-                    </span>
+                    @if ($campaign->isAchieved())
+                        <span class="rounded-full bg-sky-500/20 px-3 py-1 text-xs text-sky-200">Achieved</span>
+                    @elseif ($campaign->isActive())
+                        <span class="rounded-full bg-emerald-500/20 px-3 py-1 text-xs text-emerald-200">Active</span>
+                    @else
+                        <span class="rounded-full bg-rose-500/20 px-3 py-1 text-xs text-rose-200">Closed</span>
+                    @endif
                 </div>
 
                 <div class="mt-6">

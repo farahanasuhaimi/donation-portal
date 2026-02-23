@@ -11,6 +11,7 @@ class CampaignController extends Controller
     public function index()
     {
         $campaigns = Campaign::query()
+            ->whereNull('archived_at')
             ->withSum('donations', 'amount')
             ->orderByDesc('created_at')
             ->get();
@@ -20,6 +21,10 @@ class CampaignController extends Controller
 
     public function show(Request $request, Campaign $campaign)
     {
+        if ($campaign->isArchived()) {
+            abort(404);
+        }
+
         $campaign->loadSum('donations', 'amount');
 
         $donations = $campaign->donations()

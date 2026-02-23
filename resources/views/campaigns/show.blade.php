@@ -12,9 +12,13 @@
                     <h1 class="text-3xl font-semibold">{{ $campaign->title }}</h1>
                     <p class="mt-3 text-slate-300">{{ $campaign->description }}</p>
                 </div>
-                <span class="rounded-full px-3 py-1 text-xs {{ $campaign->isActive() ? 'bg-emerald-500/20 text-emerald-200' : 'bg-rose-500/20 text-rose-200' }}">
-                    {{ $campaign->isActive() ? 'Active' : 'Closed' }}
-                </span>
+                @if ($campaign->isAchieved())
+                    <span class="rounded-full bg-sky-500/20 px-3 py-1 text-xs text-sky-200">Achieved</span>
+                @elseif ($campaign->isActive())
+                    <span class="rounded-full bg-emerald-500/20 px-3 py-1 text-xs text-emerald-200">Active</span>
+                @else
+                    <span class="rounded-full bg-rose-500/20 px-3 py-1 text-xs text-rose-200">Closed</span>
+                @endif
             </div>
 
             <div class="mt-8">
@@ -94,7 +98,9 @@
                         </button>
                     </form>
 
-                    @if (! $campaign->isActive())
+                    @if ($campaign->isAchieved())
+                        <p class="mt-3 text-xs text-sky-200">Target achieved. This campaign is fulfilled.</p>
+                    @elseif (! $campaign->isActive())
                         <p class="mt-3 text-xs text-rose-200">This campaign is closed.</p>
                     @endif
 

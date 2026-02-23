@@ -4,12 +4,22 @@
             <h1 class="text-2xl font-semibold">Admin Dashboard</h1>
             <p class="mt-2 text-sm text-slate-300">Manage campaigns and track donations.</p>
         </div>
-        <a
-            href="{{ route('admin.campaigns.create') }}"
-            class="rounded-full bg-emerald-400 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-900 hover:bg-emerald-300"
-        >
-            Add Campaign
-        </a>
+        <div class="flex items-center gap-3">
+            @if (($role ?? null) === 'admin')
+                <a
+                    href="{{ route('admin.users.index') }}"
+                    class="rounded-full border border-white/20 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-200 hover:bg-white/10"
+                >
+                    Users
+                </a>
+            @endif
+            <a
+                href="{{ route('admin.campaigns.create') }}"
+                class="rounded-full bg-emerald-400 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-900 hover:bg-emerald-300"
+            >
+                Add Campaign
+            </a>
+        </div>
     </div>
 
     <div class="mt-8 overflow-hidden rounded-2xl border border-white/10">
@@ -32,14 +42,31 @@
                         <td class="px-4 py-3">RM {{ number_format($campaign->target_amount, 2) }}</td>
                         <td class="px-4 py-3">{{ $campaign->deadline->format('d M Y') }}</td>
                         <td class="px-4 py-3">
-                            <span class="rounded-full px-3 py-1 text-xs {{ $campaign->isActive() ? 'bg-emerald-500/20 text-emerald-200' : 'bg-rose-500/20 text-rose-200' }}">
-                                {{ $campaign->isActive() ? 'Active' : 'Closed' }}
-                            </span>
+                            @if ($campaign->isArchived())
+                                <span class="rounded-full bg-amber-500/20 px-3 py-1 text-xs text-amber-200">Archived</span>
+                            @elseif ($campaign->isAchieved())
+                                <span class="rounded-full bg-sky-500/20 px-3 py-1 text-xs text-sky-200">Achieved</span>
+                            @elseif ($campaign->isActive())
+                                <span class="rounded-full bg-emerald-500/20 px-3 py-1 text-xs text-emerald-200">Active</span>
+                            @else
+                                <span class="rounded-full bg-rose-500/20 px-3 py-1 text-xs text-rose-200">Closed</span>
+                            @endif
                         </td>
                         <td class="px-4 py-3 text-right">
-                            <a href="{{ route('admin.campaigns.edit', $campaign) }}" class="text-emerald-200 hover:text-emerald-100">
-                                Edit / Donors
-                            </a>
+                            @if (! $campaign->isArchived() || ($role ?? null) === 'admin')
+                                <a href="{{ route('admin.campaigns.edit', $campaign) }}" class="text-emerald-200 hover:text-emerald-100">
+                                    Edit / Donors
+                                </a>
+                            @endif
+                            @if (! $campaign->isArchived())
+                                <form method="post" action="{{ route('admin.campaigns.destroy', $campaign) }}" class="mt-2">
+                                    @csrf
+                                    @method('delete')
+                                    <button type="submit" class="text-xs text-rose-200 hover:text-rose-100">
+                                        Archive
+                                    </button>
+                                </form>
+                            @endif
                         </td>
                     </tr>
                 @empty

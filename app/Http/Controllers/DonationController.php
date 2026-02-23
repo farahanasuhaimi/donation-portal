@@ -11,7 +11,15 @@ class DonationController extends Controller
     public function store(Request $request, Campaign $campaign)
     {
         if (! $campaign->isActive()) {
-            return back()->withErrors(['amount' => 'This campaign is closed.'])->withInput();
+            if ($campaign->isArchived()) {
+                $message = 'This campaign is archived.';
+            } elseif ($campaign->isAchieved()) {
+                $message = 'This campaign has reached its target and is fulfilled.';
+            } else {
+                $message = 'This campaign is closed.';
+            }
+
+            return back()->withErrors(['amount' => $message])->withInput();
         }
 
         $data = $request->validate([

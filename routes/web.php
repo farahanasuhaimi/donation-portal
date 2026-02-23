@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\CampaignController as AdminCampaignController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\DonorAuthController;
 use App\Http\Controllers\Auth\DonorGoogleAuthController;
 use App\Http\Controllers\CampaignController;
@@ -33,8 +34,10 @@ Route::get('/organizer/login', function () {
 
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminCampaignController::class, 'index'])->name('dashboard');
+    Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
     Route::get('/campaign/create', [AdminCampaignController::class, 'create'])->name('campaigns.create');
     Route::post('/campaign', [AdminCampaignController::class, 'store'])->name('campaigns.store');
     Route::get('/campaign/{campaign}/edit', [AdminCampaignController::class, 'edit'])->name('campaigns.edit');
     Route::put('/campaign/{campaign}', [AdminCampaignController::class, 'update'])->name('campaigns.update');
+    Route::delete('/campaign/{campaign}', [AdminCampaignController::class, 'destroy'])->name('campaigns.destroy');
 });
