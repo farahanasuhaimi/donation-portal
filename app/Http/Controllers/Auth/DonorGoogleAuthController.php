@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -11,8 +12,15 @@ use Laravel\Socialite\Facades\Socialite;
 
 class DonorGoogleAuthController extends Controller
 {
-    public function redirect()
+    public function redirect(Request $request)
     {
+        $role = $request->query('role', 'donor');
+        if (! in_array($role, ['donor', 'organizer'], true)) {
+            $role = 'donor';
+        }
+
+        $request->session()->put('oauth_target_role', $role);
+
         return Socialite::driver('google')
             ->scopes(['openid', 'profile', 'email'])
             ->redirect();
@@ -20,6 +28,11 @@ class DonorGoogleAuthController extends Controller
 
     public function callback()
     {
+        $targetRole = session()->pull('oauth_target_role', 'donor');
+        if (! in_array($targetRole, ['donor', 'organizer'], true)) {
+            $targetRole = 'donor';
+        }
+
         $googleUser = Socialite::driver('google')->user();
 
         $user = User::query()
@@ -35,7 +48,7 @@ class DonorGoogleAuthController extends Controller
                 'email_verified_at' => now(),
                 'google_id' => $googleUser->id,
                 'avatar' => $googleUser->avatar,
-                'role' => 'donor',
+                'role' => $targetRole,
             ]);
         } else {
             $user->fill([
@@ -48,7 +61,11 @@ class DonorGoogleAuthController extends Controller
             }
 
             if (! $user->role) {
-                $user->role = 'donor';
+                $user->role = $targetRole;
+            }
+
+            if ($targetRole === 'organizer' && $user->role === 'donor') {
+                $user->role = 'organizer';
             }
 
             $user->save();
@@ -63,6 +80,10 @@ class DonorGoogleAuthController extends Controller
             ]);
         } else {
             session()->forget(['admin_logged_in', 'auth_role', 'admin_intended']);
+        }
+
+        if (in_array($user->role, ['admin', 'organizer'], true)) {
+            return redirect()->route('admin.dashboard');
         }
 
         return redirect()->route('campaigns.index');

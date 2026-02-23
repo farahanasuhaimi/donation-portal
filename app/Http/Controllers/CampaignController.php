@@ -29,7 +29,7 @@ class CampaignController extends Controller
 
         $authUser = $request->user();
         $donorName = $authUser?->name ?? $request->session()->get('donor_name');
-        $donorAliasName = $request->session()->get('donor_alias_name');
+        $donorAliasName = $authUser?->alias_name ?? $request->session()->get('donor_alias_name');
         $donorMobile = $request->session()->get('donor_mobile');
         $donorTotal = null;
 

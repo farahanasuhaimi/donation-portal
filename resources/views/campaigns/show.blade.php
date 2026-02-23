@@ -48,7 +48,11 @@
                                 value="{{ old('donor_name', $donorName) }}"
                                 class="mt-2 w-full rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-sm"
                                 required
+                                {{ auth()->check() ? 'readonly' : '' }}
                             />
+                            @if (auth()->check())
+                                <p class="mt-1 text-xs text-slate-500">Using your account name for this donation.</p>
+                            @endif
                         </div>
                         <div>
                             <label class="text-xs text-slate-400">Nama Samaran (optional)</label>

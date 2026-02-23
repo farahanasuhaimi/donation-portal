@@ -21,13 +21,22 @@ class DonationController extends Controller
             'amount' => 'required|numeric|min:1',
         ]);
 
+        $authUser = $request->user();
+
         $realName = trim($data['donor_name']);
+        if ($authUser && $authUser->name) {
+            $realName = $authUser->name;
+        }
+
         $aliasName = trim((string) ($data['donor_alias_name'] ?? ''));
         $aliasName = $aliasName === '' ? null : $aliasName;
+        if ($aliasName === null && $authUser?->alias_name) {
+            $aliasName = $authUser->alias_name;
+        }
         $publicName = $aliasName ?: $realName;
         $mobile = $data['donor_mobile'] ?? null;
         $mobile = $mobile === '' ? null : $mobile;
-        $donorUserId = $request->user()?->id;
+        $donorUserId = $authUser?->id;
 
         Donation::create([
             'campaign_id' => $campaign->id,

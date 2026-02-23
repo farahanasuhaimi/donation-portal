@@ -21,21 +21,22 @@
                             </a>
                             <form
                                 method="post"
-                                action="{{ session('auth_role') === 'organizer' ? route('organizer.logout') : route('admin.logout') }}"
+                                action="{{ session('auth_role') === 'organizer' ? route('donor.logout') : route('admin.logout') }}"
                             >
                                 @csrf
                                 <button type="submit" class="hover:text-white">Logout</button>
                             </form>
                         @elseif (auth()->check())
                             <span class="text-slate-400">Hi, {{ auth()->user()->name }}</span>
+                            @if (auth()->user()->role === 'organizer')
+                                <a href="{{ route('admin.dashboard') }}" class="hover:text-white">Organizer Panel</a>
+                            @endif
                             <form method="post" action="{{ route('donor.logout') }}">
                                 @csrf
                                 <button type="submit" class="hover:text-white">Logout</button>
                             </form>
                         @else
-                            <a href="{{ route('donor.login') }}" class="hover:text-white">Donor Login</a>
-                            <a href="{{ route('donor.register') }}" class="hover:text-white">Donor Register</a>
-                            <a href="{{ route('organizer.login') }}" class="hover:text-white">Organizer Login</a>
+                            <a href="{{ route('auth.page') }}" class="hover:text-white">Account</a>
                             <a href="{{ route('admin.login') }}" class="hover:text-white">Admin Login</a>
                         @endif
                     </nav>

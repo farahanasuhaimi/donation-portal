@@ -10,34 +10,12 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        return view('organizer.auth.login');
+        return redirect()->route('auth.page', ['mode' => 'login', 'role' => 'organizer']);
     }
 
     public function login(Request $request)
     {
-        $data = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|string',
-        ]);
-
-        $organizerEmail = config('organizer.email');
-        $organizerPassword = config('organizer.password');
-
-        if ($organizerEmail && $organizerPassword
-            && $data['email'] === $organizerEmail
-            && $data['password'] === $organizerPassword) {
-            // Reuse existing admin-protected dashboard permissions.
-            $request->session()->put('admin_logged_in', true);
-            $request->session()->put('auth_role', 'organizer');
-
-            $intended = $request->session()->pull('admin_intended', route('admin.dashboard'));
-
-            return redirect()->to($intended);
-        }
-
-        return back()
-            ->withErrors(['email' => 'Invalid organizer credentials.'])
-            ->withInput();
+        return redirect()->route('auth.page', ['mode' => 'login', 'role' => 'organizer']);
     }
 
     public function logout(Request $request)
