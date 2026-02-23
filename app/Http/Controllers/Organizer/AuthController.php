@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -9,7 +9,7 @@ class AuthController extends Controller
 {
     public function showLogin()
     {
-        return view('admin.auth.login');
+        return view('organizer.auth.login');
     }
 
     public function login(Request $request)
@@ -19,14 +19,15 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $adminEmail = config('admin.email');
-        $adminPassword = config('admin.password');
+        $organizerEmail = config('organizer.email');
+        $organizerPassword = config('organizer.password');
 
-        if ($adminEmail && $adminPassword
-            && $data['email'] === $adminEmail
-            && $data['password'] === $adminPassword) {
+        if ($organizerEmail && $organizerPassword
+            && $data['email'] === $organizerEmail
+            && $data['password'] === $organizerPassword) {
+            // Reuse existing admin-protected dashboard permissions.
             $request->session()->put('admin_logged_in', true);
-            $request->session()->put('auth_role', 'admin');
+            $request->session()->put('auth_role', 'organizer');
 
             $intended = $request->session()->pull('admin_intended', route('admin.dashboard'));
 
@@ -34,7 +35,7 @@ class AuthController extends Controller
         }
 
         return back()
-            ->withErrors(['email' => 'Invalid admin credentials.'])
+            ->withErrors(['email' => 'Invalid organizer credentials.'])
             ->withInput();
     }
 
@@ -42,6 +43,6 @@ class AuthController extends Controller
     {
         $request->session()->forget(['admin_logged_in', 'admin_intended', 'auth_role']);
 
-        return redirect()->route('admin.login');
+        return redirect()->route('organizer.login');
     }
 }

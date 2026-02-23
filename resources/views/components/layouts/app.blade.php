@@ -16,13 +16,19 @@
                     <nav class="flex items-center gap-4 text-sm text-slate-300">
                         <a href="{{ route('campaigns.index') }}" class="hover:text-white">Campaigns</a>
                         @if (session('admin_logged_in'))
-                            <a href="{{ route('admin.dashboard') }}" class="hover:text-white">Admin</a>
-                            <form method="post" action="{{ route('admin.logout') }}">
+                            <a href="{{ route('admin.dashboard') }}" class="hover:text-white">
+                                {{ session('auth_role') === 'organizer' ? 'Organizer Panel' : 'Admin Panel' }}
+                            </a>
+                            <form
+                                method="post"
+                                action="{{ session('auth_role') === 'organizer' ? route('organizer.logout') : route('admin.logout') }}"
+                            >
                                 @csrf
                                 <button type="submit" class="hover:text-white">Logout</button>
                             </form>
                         @else
-                            <a href="{{ route('admin.login') }}" class="hover:text-white">Organizer Login</a>
+                            <a href="{{ route('organizer.login') }}" class="hover:text-white">Organizer Login</a>
+                            <a href="{{ route('admin.login') }}" class="hover:text-white">Admin Login</a>
                         @endif
                     </nav>
                 </div>

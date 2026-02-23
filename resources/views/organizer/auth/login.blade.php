@@ -1,9 +1,9 @@
-<x-layouts.app :title="'Admin Login'">
+<x-layouts.app :title="'Organizer Login'">
     <div class="mx-auto max-w-md rounded-2xl border border-white/10 bg-white/5 p-8">
-        <h1 class="text-2xl font-semibold">Admin Login</h1>
-        <p class="mt-2 text-sm text-slate-300">Use the admin credentials from your `.env` file.</p>
+        <h1 class="text-2xl font-semibold">Organizer Login</h1>
+        <p class="mt-2 text-sm text-slate-300">Use the organizer credentials from your `.env` file.</p>
 
-        <form class="mt-6 space-y-4" method="post" action="{{ route('admin.login.submit') }}">
+        <form class="mt-6 space-y-4" method="post" action="{{ route('organizer.login.submit') }}">
             @csrf
             <div>
                 <label class="text-xs text-slate-400">Email</label>
