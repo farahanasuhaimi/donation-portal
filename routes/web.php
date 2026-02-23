@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CampaignController as AdminCampaignController;
 use App\Http\Controllers\CampaignController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\Organizer\AuthController as OrganizerAuthController;
+use App\Http\Controllers\Organizer\GoogleAuthController as OrganizerGoogleAuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [CampaignController::class, 'index'])->name('campaigns.index');
@@ -18,6 +19,8 @@ Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admi
 Route::get('/organizer/login', [OrganizerAuthController::class, 'showLogin'])->name('organizer.login');
 Route::post('/organizer/login', [OrganizerAuthController::class, 'login'])->name('organizer.login.submit');
 Route::post('/organizer/logout', [OrganizerAuthController::class, 'logout'])->name('organizer.logout');
+Route::get('/organizer/auth/google/redirect', [OrganizerGoogleAuthController::class, 'redirect'])->name('organizer.google.redirect');
+Route::get('/organizer/auth/google/callback', [OrganizerGoogleAuthController::class, 'callback'])->name('organizer.google.callback');
 
 Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminCampaignController::class, 'index'])->name('dashboard');
