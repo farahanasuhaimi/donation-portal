@@ -1,59 +1,145 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Ramadan Donation Portal
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Laravel-based donation portal for Ramadan campaigns with:
+- Public campaign browsing and donation pledges
+- Account auth (email/password + Google OAuth)
+- Role-based access (`donor`, `organizer`, `admin`)
+- Organizer-owned campaigns
+- Campaign archive flow (soft-delete style)
 
-## About Laravel
+## Stack
+- PHP 8.2+
+- Laravel 12
+- MySQL
+- Blade + Vite
+- Socialite (Google login)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Core Features
+### Public
+- View active campaigns
+- View campaign progress and recent donations
+- Submit donation pledge
+- Optional `nama samaran` for public donor name masking
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Accounts
+- Single auth page (`/auth`) with tabbed login/register
+- Role selection (`donor` / `organizer`) during auth
+- Google OAuth login callback: `/auth/google/callback`
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Organizer
+- Create campaigns
+- Edit only campaigns they own
+- Archive campaigns they own
+- Cannot see archived campaigns in organizer dashboard
 
-## Learning Laravel
+### Admin
+- View all campaigns (including archived)
+- Edit all campaigns
+- View users overview:
+  - Registered organizers
+  - Registered donors
+  - Unregistered donors (derived from donation records)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Database Notes
+Main domain tables:
+- `campaigns`
+- `donations`
+- `users`
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Additional fields added by custom migrations:
+- Campaign ownership: `campaigns.organizer_user_id`
+- Campaign archive: `campaigns.archived_at`, `campaigns.archived_by_user_id`
+- Donor linkage: `donations.donor_user_id`, `donor_real_name`, `donor_alias_name`
+- User alias: `users.alias_name`
 
-## Laravel Sponsors
+## Local Setup
+```bash
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+npm install
+npm run build
+php artisan serve
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Production Deploy (Hostinger)
+From project root on server:
+```bash
+git pull origin main
+composer install --no-dev --optimize-autoloader
+php artisan migrate --force
+php artisan optimize:clear
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
 
-### Premium Partners
+## Required `.env` (Production)
+```env
+APP_ENV=production
+APP_DEBUG=false
+APP_URL=https://ramadan.farahana.com
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=...
+DB_USERNAME=...
+DB_PASSWORD=...
 
-## Contributing
+GOOGLE_CLIENT_ID=...
+GOOGLE_CLIENT_SECRET=...
+GOOGLE_REDIRECT_URI=https://ramadan.farahana.com/auth/google/callback
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+FILESYSTEM_DISK=public
+```
 
-## Code of Conduct
+## Google OAuth Setup
+In Google Cloud Console:
+1. Create OAuth client credentials (Web application)
+2. Add authorized redirect URI exactly:
+   - `https://ramadan.farahana.com/auth/google/callback`
+3. Put credentials into `.env`
+4. Clear/cache config:
+```bash
+php artisan optimize:clear
+php artisan config:cache
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## File Upload / QR Image
+- QR images are stored on `public` disk (`storage/app/public/qr_images`)
+- Ensure storage symlink exists in production:
+  - If `php artisan storage:link` fails due disabled `exec()`, create symlink manually in shell.
 
-## Security Vulnerabilities
+## Campaign Status Rules
+- `Achieved`: total collected >= target
+- `Active`: not achieved, not archived, and before deadline
+- `Closed`: deadline passed
+- `Archived`: manually archived by organizer/admin; hidden from public and organizer views
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Next Step (Security Hardening)
+Planned next implementation:
+1. Route-level rate limiting for auth and donation actions
+2. Security headers middleware (CSP, X-Frame-Options, etc.)
+3. Organizer approval workflow (instead of open organizer self-selection)
+4. Email verification requirement for email/password signups
+5. Audit/security logging for repeated failed auth attempts
 
-## License
+## Troubleshooting
+### Google login 500 (`Socialite class not found`)
+```bash
+composer require laravel/socialite:^5.16 --no-interaction
+composer dump-autoload -o
+php artisan optimize:clear
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Migration says table already exists
+- Table was likely created manually before migrations.
+- Align migration state or use a clean new database and run migrations.
+
+### Config changes not reflected
+```bash
+php artisan optimize:clear
+php artisan config:cache
+```
