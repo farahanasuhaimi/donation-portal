@@ -9,10 +9,21 @@ use Illuminate\Support\Facades\Storage;
 
 class CampaignController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $role = (string) ($request->session()->get('auth_role') ?: $request->user()?->role);
+        $userId = $request->user()?->id;
+
+        if ($role === 'organizer' && ! $userId) {
+            abort(403, 'Organizer account is required.');
+        }
+
         $campaigns = Campaign::query()
             ->withSum('donations', 'amount')
+            ->when(
+                $role === 'organizer',
+                fn ($query) => $query->where('organizer_user_id', $userId)
+            )
             ->orderByDesc('created_at')
             ->get();
 
@@ -26,6 +37,13 @@ class CampaignController extends Controller
 
     public function store(Request $request)
     {
+        $role = (string) ($request->session()->get('auth_role') ?: $request->user()?->role);
+        $userId = $request->user()?->id;
+
+        if ($role === 'organizer' && ! $userId) {
+            abort(403, 'Organizer account is required.');
+        }
+
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -37,6 +55,7 @@ class CampaignController extends Controller
         $path = $request->file('qr_image')->store('qr_images', 'public');
 
         $campaign = Campaign::create([
+            'organizer_user_id' => $role === 'organizer' ? $userId : null,
             'title' => $data['title'],
             'description' => $data['description'],
             'target_amount' => $data['target_amount'],
@@ -49,8 +68,10 @@ class CampaignController extends Controller
             ->with('status', 'Campaign created.');
     }
 
-    public function edit(Campaign $campaign)
+    public function edit(Request $request, Campaign $campaign)
     {
+        $this->authorizeCampaign($request, $campaign);
+
         $campaign->loadSum('donations', 'amount');
         $donations = $campaign->donations()->orderByDesc('created_at')->get();
 
@@ -59,6 +80,8 @@ class CampaignController extends Controller
 
     public function update(Request $request, Campaign $campaign)
     {
+        $this->authorizeCampaign($request, $campaign);
+
         $data = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -87,5 +110,15 @@ class CampaignController extends Controller
         return redirect()
             ->route('admin.campaigns.edit', $campaign)
             ->with('status', 'Campaign updated.');
+    }
+
+    private function authorizeCampaign(Request $request, Campaign $campaign): void
+    {
+        $role = (string) ($request->session()->get('auth_role') ?: $request->user()?->role);
+        $userId = $request->user()?->id;
+
+        if ($role === 'organizer' && (! $userId || (int) $campaign->organizer_user_id !== (int) $userId)) {
+            abort(403, 'You can only manage campaigns you created.');
+        }
     }
 }
