@@ -55,13 +55,29 @@
         </div>
 
         <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+            @php
+                $totalAmount = (float) $donations->sum('amount');
+                $confirmedAmount = (float) $donations->where('is_confirmed', true)->sum('amount');
+                $pendingAmount = $totalAmount - $confirmedAmount;
+                $confirmedPercent = $totalAmount > 0 ? round(($confirmedAmount / $totalAmount) * 100) : 0;
+            @endphp
             <h2 class="text-lg font-semibold">Donor History</h2>
             <p class="mt-2 text-sm text-slate-300">
                 Total collected: RM {{ number_format($collected, 2) }}
             </p>
+            <div class="mt-4 rounded-xl border border-white/10 bg-slate-950/40 p-4 text-sm">
+                <div class="flex items-center justify-between text-xs text-slate-400">
+                    <span>Confirmed: RM {{ number_format($confirmedAmount, 2) }}</span>
+                    <span>Pending: RM {{ number_format(max($pendingAmount, 0), 2) }}</span>
+                </div>
+                <div class="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
+                    <div class="h-full rounded-full bg-emerald-400" style="width: {{ $confirmedPercent }}%"></div>
+                </div>
+                <p class="mt-2 text-xs text-slate-400">{{ $confirmedPercent }}% confirmed</p>
+            </div>
             <div class="mt-6 space-y-3">
                 @forelse ($donations as $donation)
-                    <div class="flex items-center justify-between rounded-lg border border-white/10 bg-slate-950/40 px-4 py-3 text-sm">
+                    <div class="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-white/10 bg-slate-950/40 px-4 py-3 text-sm">
                         <div>
                             <p class="font-medium">{{ $donation->donor_name }}</p>
                             @if ($donation->donor_alias_name && $donation->donor_real_name)
@@ -70,8 +86,38 @@
                             <p class="text-xs text-slate-400">
                                 {{ $donation->donor_mobile ?: 'No mobile' }} | {{ $donation->created_at->format('d M Y, H:i') }}
                             </p>
+                            <div class="mt-2">
+                                @if ($donation->is_confirmed)
+                                    <span class="rounded-full bg-emerald-500/20 px-3 py-1 text-xs text-emerald-200">Confirmed</span>
+                                @else
+                                    <span class="rounded-full bg-amber-500/20 px-3 py-1 text-xs text-amber-200">Pending</span>
+                                @endif
+                            </div>
                         </div>
-                        <span class="text-emerald-200">RM {{ number_format($donation->amount, 2) }}</span>
+                        <div class="text-right">
+                            <span class="text-emerald-200">RM {{ number_format($donation->amount, 2) }}</span>
+                            <div class="mt-2">
+                                @if ($donation->is_confirmed)
+                                    <form method="post" action="{{ route('admin.campaigns.donations.confirm', [$campaign, $donation]) }}">
+                                        @csrf
+                                        @method('patch')
+                                        <input type="hidden" name="confirmed" value="0" />
+                                        <button type="submit" class="text-xs text-slate-300 hover:text-white">
+                                            Mark Pending
+                                        </button>
+                                    </form>
+                                @else
+                                    <form method="post" action="{{ route('admin.campaigns.donations.confirm', [$campaign, $donation]) }}">
+                                        @csrf
+                                        @method('patch')
+                                        <input type="hidden" name="confirmed" value="1" />
+                                        <button type="submit" class="text-xs text-emerald-200 hover:text-emerald-100">
+                                            Confirm Donation
+                                        </button>
+                                    </form>
+                                @endif
+                            </div>
+                        </div>
                     </div>
                 @empty
                     <p class="text-sm text-slate-400">No donations yet.</p>

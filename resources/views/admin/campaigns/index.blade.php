@@ -26,12 +26,12 @@
         <div class="divide-y divide-white/10 md:hidden">
             @forelse ($campaigns as $campaign)
                 <div class="bg-slate-950/30 p-4">
-                    <div class="flex items-start justify-between gap-3">
+                    <div class="flex flex-wrap items-start gap-4">
                         <div>
                             <p class="text-sm font-semibold text-white">{{ $campaign->title }}</p>
                             <p class="mt-1 text-xs text-slate-400">Deadline: {{ $campaign->deadline->format('d M Y') }}</p>
                         </div>
-                        <div class="text-right text-xs text-slate-400">
+                        <div class="text-xs text-slate-400">
                             <p class="text-xs uppercase tracking-wide text-slate-400">Status</p>
                             <div class="mt-1">
                                 @if ($campaign->isArchived())

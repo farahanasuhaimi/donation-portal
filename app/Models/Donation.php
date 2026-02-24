@@ -20,11 +20,15 @@ class Donation extends Model
         'donor_alias_name',
         'donor_mobile',
         'amount',
+        'is_confirmed',
+        'confirmed_at',
         'created_at',
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
+        'is_confirmed' => 'boolean',
+        'confirmed_at' => 'datetime',
         'created_at' => 'datetime',
     ];
 

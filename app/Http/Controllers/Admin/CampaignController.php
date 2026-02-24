@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Campaign;
+use App\Models\Donation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -131,6 +132,28 @@ class CampaignController extends Controller
         return redirect()
             ->route('admin.dashboard')
             ->with('status', 'Campaign moved to archive.');
+    }
+
+    public function confirmDonation(Request $request, Campaign $campaign, Donation $donation)
+    {
+        $this->authorizeCampaign($request, $campaign);
+
+        if ((int) $donation->campaign_id !== (int) $campaign->id) {
+            abort(404);
+        }
+
+        $data = $request->validate([
+            'confirmed' => 'required|boolean',
+        ]);
+
+        $isConfirmed = (bool) $data['confirmed'];
+        $donation->is_confirmed = $isConfirmed;
+        $donation->confirmed_at = $isConfirmed ? now() : null;
+        $donation->save();
+
+        return redirect()
+            ->route('admin.campaigns.edit', $campaign)
+            ->with('status', $isConfirmed ? 'Donation confirmed.' : 'Donation marked as pending.');
     }
 
     private function authorizeCampaign(Request $request, Campaign $campaign): void

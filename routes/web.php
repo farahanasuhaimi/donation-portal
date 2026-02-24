@@ -39,5 +39,6 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::post('/campaign', [AdminCampaignController::class, 'store'])->name('campaigns.store');
     Route::get('/campaign/{campaign}/edit', [AdminCampaignController::class, 'edit'])->name('campaigns.edit');
     Route::put('/campaign/{campaign}', [AdminCampaignController::class, 'update'])->name('campaigns.update');
+    Route::patch('/campaign/{campaign}/donations/{donation}', [AdminCampaignController::class, 'confirmDonation'])->name('campaigns.donations.confirm');
     Route::delete('/campaign/{campaign}', [AdminCampaignController::class, 'destroy'])->name('campaigns.destroy');
 });
