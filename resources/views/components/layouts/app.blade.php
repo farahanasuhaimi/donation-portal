@@ -9,11 +9,11 @@
     <body class="min-h-screen bg-slate-950 text-slate-100">
         <div class="bg-gradient-to-b from-emerald-950 via-slate-950 to-slate-950">
             <header class="border-b border-white/10">
-                <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-                    <a href="{{ route('campaigns.index') }}" class="text-lg font-semibold tracking-wide">
+                <div class="mx-auto flex max-w-6xl flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
+                    <a href="{{ route('campaigns.index') }}" class="text-center text-lg font-semibold tracking-wide sm:text-left">
                         Portal Infaq Ramadan
                     </a>
-                    <nav class="flex items-center gap-4 text-sm text-slate-300">
+                    <nav class="flex w-full flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-slate-300 sm:w-auto sm:justify-end">
                         <a href="{{ route('campaigns.index') }}" class="hover:text-white">Kempen Derma</a>
                         @if (session('admin_logged_in'))
                             <a href="{{ route('admin.dashboard') }}" class="hover:text-white">
@@ -43,7 +43,7 @@
                 </div>
             </header>
 
-            <main class="mx-auto max-w-6xl px-6 py-10">
+            <main class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
                 @if (session('status'))
                     <div class="mb-6 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
                         {{ session('status') }}

@@ -1,6 +1,6 @@
 <x-layouts.app>
     <div class="mb-10">
-        <h1 class="text-3xl font-semibold">Derma, Sedekah &amp; Infaq Ramadan</h1>
+        <h1 class="text-2xl font-semibold sm:text-3xl">Derma, Sedekah &amp; Infaq Ramadan</h1>
         <p class="mt-2 text-slate-300">Sokong usaha komuniti melalui derma, sedekah dan infaq — Pahala berganda di bulan Ramadan.</p>
     </div>
 
@@ -11,8 +11,8 @@
                 $target = (float) $campaign->target_amount;
                 $progress = $target > 0 ? min(100, ($collected / $target) * 100) : 0;
             @endphp
-            <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/20">
-                <div class="flex items-start justify-between gap-4">
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-lg shadow-black/20 sm:p-6">
+                <div class="flex flex-wrap items-start justify-between gap-3">
                     <div>
                         <h2 class="text-xl font-semibold">{{ $campaign->title }}</h2>
                         <p class="mt-2 text-sm text-slate-300">{{ \Illuminate\Support\Str::limit($campaign->description, 140) }}</p>
@@ -36,7 +36,7 @@
                     </div>
                 </div>
 
-                <div class="mt-6 flex items-center justify-between">
+                <div class="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <span class="text-xs text-slate-400">Tarikh akhir: {{ $campaign->deadline->format('d M Y') }}</span>
                     <a
                         href="{{ route('campaigns.show', $campaign) }}"

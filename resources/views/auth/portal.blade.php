@@ -1,5 +1,5 @@
 <x-layouts.app :title="'Akaun'">
-    <div class="mx-auto max-w-lg rounded-xl border border-white/10 bg-slate-900/60 p-6">
+    <div class="mx-auto w-full max-w-lg rounded-xl border border-white/10 bg-slate-900/60 p-4 sm:p-6">
         <h1 class="text-xl font-semibold">Akaun</h1>
         <p class="mt-1 text-sm text-slate-400">Log masuk atau daftar akaun.</p>
 
@@ -9,7 +9,7 @@
         </div>
 
         <div id="login-panel" class="mt-5 space-y-4">
-            <div class="grid grid-cols-2 gap-2">
+            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 <button type="button" data-login-role="donor" class="login-role-btn rounded-md border border-white/10 px-3 py-2 text-sm">Penderma</button>
                 <button type="button" data-login-role="organizer" class="login-role-btn rounded-md border border-white/10 px-3 py-2 text-sm">Penganjur</button>
             </div>
@@ -17,7 +17,7 @@
             <a
                 id="google-login-link"
                 href="{{ route('auth.google.redirect', ['role' => $role]) }}"
-                class="block w-full rounded-md border border-white/15 px-4 py-2 text-center text-sm text-slate-200 hover:bg-white/5"
+                class="mx-auto block w-full max-w-xs rounded-md border border-white/15 px-4 py-2 text-center text-sm text-slate-200 hover:bg-white/5"
             >
                 Teruskan dengan Google
             </a>
@@ -40,7 +40,7 @@
         </div>
 
         <div id="register-panel" class="mt-5 hidden space-y-4">
-            <div class="grid grid-cols-2 gap-2">
+            <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 <button type="button" data-register-role="donor" class="register-role-btn rounded-md border border-white/10 px-3 py-2 text-sm">Penderma</button>
                 <button type="button" data-register-role="organizer" class="register-role-btn rounded-md border border-white/10 px-3 py-2 text-sm">Penganjur</button>
             </div>

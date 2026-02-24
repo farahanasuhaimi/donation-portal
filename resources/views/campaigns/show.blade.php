@@ -6,10 +6,10 @@
     @endphp
 
     <div class="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-        <div class="rounded-2xl border border-white/10 bg-white/5 p-8">
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-8">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                    <h1 class="text-3xl font-semibold">{{ $campaign->title }}</h1>
+                    <h1 class="text-2xl font-semibold sm:text-3xl">{{ $campaign->title }}</h1>
                     <p class="mt-3 text-slate-300">{{ $campaign->description }}</p>
                 </div>
                 @if ($campaign->isAchieved())
@@ -21,7 +21,7 @@
                 @endif
             </div>
 
-            <div class="mt-8">
+            <div class="mt-6 sm:mt-8">
                 <div class="h-2 w-full rounded-full bg-white/10">
                     <div class="h-2 rounded-full bg-emerald-400" style="width: {{ $progress }}%"></div>
                 </div>
@@ -31,9 +31,9 @@
                 </div>
             </div>
 
-            <div class="mt-8 grid gap-6 md:grid-cols-2">
+            <div class="mt-6 grid gap-6 md:grid-cols-2 sm:mt-8">
                 <div class="rounded-xl border border-white/10 bg-slate-950/40 p-4">
-                    <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Imbas QR</p>
+                    <p class="text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-slate-400">Imbas QR</p>
                     <img
                         class="mt-4 w-full rounded-lg border border-white/10 bg-white p-2"
                         src="{{ \Illuminate\Support\Facades\Storage::url($campaign->qr_image) }}"
@@ -41,7 +41,7 @@
                     />
                 </div>
                 <div class="rounded-xl border border-white/10 bg-slate-950/40 p-4">
-                    <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Borang Derma / Sedekah / Infaq</p>
+                    <p class="text-xs uppercase tracking-[0.15em] sm:tracking-[0.2em] text-slate-400">Borang Derma / Sedekah / Infaq</p>
                     <form class="mt-4 space-y-4" method="post" action="{{ route('campaigns.donate', $campaign) }}">
                         @csrf
                         <div>
@@ -113,12 +113,12 @@
             </div>
         </div>
 
-        <div class="rounded-2xl border border-white/10 bg-white/5 p-6">
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-5 sm:p-6">
             <h2 class="text-lg font-semibold">Derma Terkini</h2>
             <p class="mt-2 text-sm text-slate-300">10 rekod derma terkini untuk kempen ini.</p>
             <div class="mt-6 space-y-4">
                 @forelse ($donations as $donation)
-                    <div class="flex items-center justify-between rounded-lg border border-white/10 bg-slate-950/40 px-4 py-3 text-sm">
+                    <div class="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-white/10 bg-slate-950/40 px-4 py-3 text-sm">
                         <div>
                             <p class="font-medium">{{ $donation->donor_name }}</p>
                             <p class="text-xs text-slate-400">{{ $donation->created_at->format('d M Y, H:i') }}</p>
