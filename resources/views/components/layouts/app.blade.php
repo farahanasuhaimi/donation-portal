@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>{{ $title ?? 'Ramadan Donation Portal' }}</title>
+        <title>{{ $title ?? 'Portal Infaq Ramadan' }}</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="min-h-screen bg-slate-950 text-slate-100">
@@ -11,7 +11,7 @@
             <header class="border-b border-white/10">
                 <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
                     <a href="{{ route('campaigns.index') }}" class="text-lg font-semibold tracking-wide">
-                        Ramadan Donation Portal
+                        Portal Infaq Ramadan
                     </a>
                     <nav class="flex items-center gap-4 text-sm text-slate-300">
                         <a href="{{ route('campaigns.index') }}" class="hover:text-white">Campaigns</a>
