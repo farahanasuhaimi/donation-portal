@@ -23,7 +23,62 @@
     </div>
 
     <div class="mt-8 overflow-hidden rounded-2xl border border-white/10">
-        <table class="w-full text-left text-sm">
+        <div class="divide-y divide-white/10 md:hidden">
+            @forelse ($campaigns as $campaign)
+                <div class="bg-slate-950/30 p-4">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <p class="text-sm font-semibold text-white">{{ $campaign->title }}</p>
+                            <p class="mt-1 text-xs text-slate-400">Deadline: {{ $campaign->deadline->format('d M Y') }}</p>
+                        </div>
+                        <div class="text-right text-xs text-slate-400">
+                            <p class="text-xs uppercase tracking-wide text-slate-400">Status</p>
+                            <div class="mt-1">
+                                @if ($campaign->isArchived())
+                                    <span class="rounded-full bg-amber-500/20 px-3 py-1 text-xs text-amber-200">Archived</span>
+                                @elseif ($campaign->isAchieved())
+                                    <span class="rounded-full bg-sky-500/20 px-3 py-1 text-xs text-sky-200">Achieved</span>
+                                @elseif ($campaign->isActive())
+                                    <span class="rounded-full bg-emerald-500/20 px-3 py-1 text-xs text-emerald-200">Active</span>
+                                @else
+                                    <span class="rounded-full bg-rose-500/20 px-3 py-1 text-xs text-rose-200">Closed</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 grid grid-cols-2 gap-3 text-xs text-slate-300">
+                        <div class="rounded-xl bg-white/5 p-3">
+                            <p class="text-[11px] uppercase tracking-wide text-slate-400">Raised</p>
+                            <p class="mt-1 text-sm font-semibold text-emerald-200">RM {{ number_format($campaign->donations_sum_amount ?? 0, 2) }}</p>
+                        </div>
+                        <div class="rounded-xl bg-white/5 p-3">
+                            <p class="text-[11px] uppercase tracking-wide text-slate-400">Target</p>
+                            <p class="mt-1 text-sm font-semibold">RM {{ number_format($campaign->target_amount, 2) }}</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex flex-wrap items-center gap-3 text-sm">
+                        @if (! $campaign->isArchived() || ($role ?? null) === 'admin')
+                            <a href="{{ route('admin.campaigns.edit', $campaign) }}" class="text-emerald-200 hover:text-emerald-100">
+                                Edit / Donors
+                            </a>
+                        @endif
+                        @if (! $campaign->isArchived())
+                            <form method="post" action="{{ route('admin.campaigns.destroy', $campaign) }}">
+                                @csrf
+                                @method('delete')
+                                <button type="submit" class="text-xs text-rose-200 hover:text-rose-100">
+                                    Archive
+                                </button>
+                            </form>
+                        @endif
+                    </div>
+                </div>
+            @empty
+                <div class="px-4 py-4 text-sm text-slate-400">No campaigns yet.</div>
+            @endforelse
+        </div>
+
+        <table class="hidden w-full text-left text-sm md:table">
             <thead class="bg-white/5 text-xs uppercase tracking-wider text-slate-400">
                 <tr>
                     <th class="px-4 py-3">Title</th>

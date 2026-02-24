@@ -45,7 +45,36 @@
         <div class="border-b border-white/10 bg-white/5 px-4 py-3">
             <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-300">Unregistered Donors</h2>
         </div>
-        <table class="w-full text-left text-sm">
+        <div class="divide-y divide-white/10 md:hidden">
+            @forelse ($unregisteredDonors as $donor)
+                <div class="bg-slate-950/30 p-4 text-sm">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <p class="font-semibold text-white">{{ $donor->donor_name }}</p>
+                            <p class="mt-1 text-xs text-slate-400">{{ $donor->donor_mobile ?: 'No mobile' }}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[11px] uppercase tracking-wide text-slate-400">Total</p>
+                            <p class="mt-1 font-semibold text-emerald-200">RM {{ number_format((float) $donor->total_amount, 2) }}</p>
+                        </div>
+                    </div>
+                    <div class="mt-4 grid grid-cols-2 gap-3 text-xs text-slate-300">
+                        <div class="rounded-xl bg-white/5 p-3">
+                            <p class="text-[11px] uppercase tracking-wide text-slate-400">Donations</p>
+                            <p class="mt-1 text-sm font-semibold">{{ $donor->donation_count }}</p>
+                        </div>
+                        <div class="rounded-xl bg-white/5 p-3">
+                            <p class="text-[11px] uppercase tracking-wide text-slate-400">Last Donation</p>
+                            <p class="mt-1 text-sm font-semibold">{{ \Illuminate\Support\Carbon::parse($donor->last_donation_at)->format('d M Y, H:i') }}</p>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="px-4 py-4 text-sm text-slate-400">No unregistered donors found.</div>
+            @endforelse
+        </div>
+
+        <table class="hidden w-full text-left text-sm md:table">
             <thead class="bg-white/5 text-xs uppercase tracking-wider text-slate-400">
                 <tr>
                     <th class="px-4 py-3">Name</th>
