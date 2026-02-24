@@ -86,13 +86,6 @@
                             <p class="text-xs text-slate-400">
                                 {{ $donation->donor_mobile ?: 'No mobile' }} | {{ $donation->created_at->format('d M Y, H:i') }}
                             </p>
-                            <div class="mt-2">
-                                @if ($donation->is_confirmed)
-                                    <span class="rounded-full bg-emerald-500/20 px-3 py-1 text-xs text-emerald-200">Confirmed</span>
-                                @else
-                                    <span class="rounded-full bg-amber-500/20 px-3 py-1 text-xs text-amber-200">Pending</span>
-                                @endif
-                            </div>
                         </div>
                         <div class="text-right">
                             <span class="text-emerald-200">RM {{ number_format($donation->amount, 2) }}</span>
