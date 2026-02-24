@@ -96,17 +96,8 @@
                         </div>
                         <div class="text-right">
                             <span class="text-emerald-200">RM {{ number_format($donation->amount, 2) }}</span>
-                            <div class="mt-2">
-                                @if ($donation->is_confirmed)
-                                    <form method="post" action="{{ route('admin.campaigns.donations.confirm', [$campaign, $donation]) }}">
-                                        @csrf
-                                        @method('patch')
-                                        <input type="hidden" name="confirmed" value="0" />
-                                        <button type="submit" class="text-xs text-slate-300 hover:text-white">
-                                            Mark Pending
-                                        </button>
-                                    </form>
-                                @else
+                            @if (! $donation->is_confirmed)
+                                <div class="mt-2">
                                     <form method="post" action="{{ route('admin.campaigns.donations.confirm', [$campaign, $donation]) }}">
                                         @csrf
                                         @method('patch')
@@ -115,8 +106,8 @@
                                             Confirm Donation
                                         </button>
                                     </form>
-                                @endif
-                            </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 @empty
