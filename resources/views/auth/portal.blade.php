@@ -13,14 +13,20 @@
                 <button type="button" data-login-role="donor" class="login-role-btn rounded-lg border border-white/10 px-3 py-2 text-sm">Donor</button>
                 <button type="button" data-login-role="organizer" class="login-role-btn rounded-lg border border-white/10 px-3 py-2 text-sm">Organizer</button>
             </div>
+            <div class="flex justify-center">
+                <a
+                    class="google-login-link inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-6 py-2 text-sm font-semibold hover:bg-white/20 transition-all"
+                    href="{{ route('auth.google.redirect', ['role' => $role]) }}"
+                >
+                    <span>Continue with Google</span>
+                </a>
+            </div>
 
-            <a
-                id="google-login-link"
-                href="{{ route('auth.google.redirect', ['role' => $role]) }}"
-                class="block w-full rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-center text-sm font-semibold hover:bg-white/20"
-            >
-                Continue with Google
-            </a>
+            <div class="relative flex items-center py-2">
+                <div class="flex-grow border-t border-white/10"></div>
+                <span class="mx-4 flex-shrink text-[10px] text-slate-500 uppercase font-bold tracking-widest">Or</span>
+                <div class="flex-grow border-t border-white/10"></div>
+            </div>
 
             <form method="post" action="{{ route('auth.login.submit') }}" class="space-y-4">
                 @csrf
@@ -43,6 +49,21 @@
             <div class="grid grid-cols-2 gap-2">
                 <button type="button" data-register-role="donor" class="register-role-btn rounded-lg border border-white/10 px-3 py-2 text-sm">Donor</button>
                 <button type="button" data-register-role="organizer" class="register-role-btn rounded-lg border border-white/10 px-3 py-2 text-sm">Organizer</button>
+            </div>
+
+            <div class="flex justify-center">
+                <a
+                    class="google-login-link inline-flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-6 py-2 text-sm font-semibold hover:bg-white/20 transition-all"
+                    href="{{ route('auth.google.redirect', ['role' => $role]) }}"
+                >
+                    <span>Continue with Google</span>
+                </a>
+            </div>
+
+            <div class="relative flex items-center py-2">
+                <div class="flex-grow border-t border-white/10"></div>
+                <span class="mx-4 flex-shrink text-[10px] text-slate-500 uppercase font-bold tracking-widest">Or</span>
+                <div class="flex-grow border-t border-white/10"></div>
             </div>
 
             <form method="post" action="{{ route('auth.register.submit') }}" class="space-y-4">
@@ -84,7 +105,7 @@
             const registerRoleBtns = document.querySelectorAll('.register-role-btn');
             const loginRoleInput = document.getElementById('login-role-input');
             const registerRoleInput = document.getElementById('register-role-input');
-            const googleLoginLink = document.getElementById('google-login-link');
+            const googleLinks = document.querySelectorAll('.google-login-link');
 
             const setMode = (mode) => {
                 const isLogin = mode === 'login';
@@ -107,14 +128,21 @@
                 });
             };
 
+            const updateGoogleLinks = (role) => {
+                googleLinks.forEach(link => {
+                    link.href = `{{ route('auth.google.redirect') }}?role=${role}`;
+                });
+            };
+
             const setLoginRole = (role) => {
                 loginRoleInput.value = role;
-                googleLoginLink.href = `{{ route('auth.google.redirect') }}?role=${role}`;
+                updateGoogleLinks(role);
                 setRoleButtons(loginRoleBtns, role);
             };
 
             const setRegisterRole = (role) => {
                 registerRoleInput.value = role;
+                updateGoogleLinks(role);
                 setRoleButtons(registerRoleBtns, role);
             };
 
