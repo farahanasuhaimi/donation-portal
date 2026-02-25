@@ -102,6 +102,7 @@
                         type="button"
                         data-copy-value="{{ route('campaigns.share', $campaign->share_token) }}"
                         data-copy-label="Link copied"
+                        onclick="copyShareLink(this)"
                         class="mt-4 w-full rounded-lg border border-white/10 bg-slate-900 px-4 py-2 text-sm font-semibold uppercase tracking-wide text-slate-200 hover:bg-slate-800"
                     >
                         Share

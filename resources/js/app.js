@@ -19,49 +19,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    const copyButtons = document.querySelectorAll('[data-copy-target],[data-copy-value]');
-    if (!copyButtons.length) return;
-
-    copyButtons.forEach((button) => {
-        button.addEventListener('click', async () => {
-            const directValue = button.getAttribute('data-copy-value');
-            const selector = button.getAttribute('data-copy-target');
-            const input = selector ? document.querySelector(selector) : null;
-            const value = directValue || input?.value;
-            if (!value) return;
-
-            const showCopied = () => {
-                const label = button.getAttribute('data-copy-label') || 'Copied';
-                const original = button.textContent;
-                button.textContent = label;
-                button.disabled = true;
-                window.setTimeout(() => {
-                    button.textContent = original;
-                    button.disabled = false;
-                }, 1500);
-            };
-
-            try {
-                await navigator.clipboard.writeText(value);
-                showCopied();
-            } catch (error) {
-                if (input) {
-                    input.select();
-                }
-
-                const fallback = document.createElement('textarea');
-                fallback.value = value;
-                fallback.setAttribute('readonly', '');
-                fallback.style.position = 'absolute';
-                fallback.style.left = '-9999px';
-                document.body.appendChild(fallback);
-                fallback.select();
-                const copied = document.execCommand('copy');
-                fallback.remove();
-                if (copied) {
-                    showCopied();
-                }
-            }
-        });
-    });
+    // Copy/share logic is handled inline to avoid asset build issues.
 });

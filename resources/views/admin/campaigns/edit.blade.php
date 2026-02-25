@@ -27,6 +27,7 @@
                         type="button"
                         data-copy-target="#share-link-admin"
                         data-copy-label="Link copied"
+                        onclick="copyShareLink(this)"
                         class="rounded-lg border border-emerald-400/40 bg-emerald-500/10 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-100 hover:bg-emerald-500/20"
                     >
                         Copy Link
