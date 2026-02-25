@@ -45,8 +45,24 @@
 
             <main class="mx-auto max-w-6xl px-6 py-10">
                 @if (session('status'))
-                    <div class="mb-6 rounded-lg border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100">
-                        {{ session('status') }}
+                    <div
+                        id="flash-toast"
+                        data-timeout="4000"
+                        class="fixed right-6 top-6 z-50 w-[min(90vw,380px)] rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100 shadow-lg backdrop-blur transition duration-200"
+                        role="status"
+                    >
+                        <div class="flex items-start gap-3">
+                            <div class="mt-0.5 h-2.5 w-2.5 flex-none rounded-full bg-emerald-300"></div>
+                            <p class="flex-1">{{ session('status') }}</p>
+                            <button
+                                type="button"
+                                data-toast-close
+                                class="rounded-md px-2 py-1 text-xs text-emerald-100/80 hover:text-white"
+                                aria-label="Close notification"
+                            >
+                                Close
+                            </button>
+                        </div>
                     </div>
                 @endif
 

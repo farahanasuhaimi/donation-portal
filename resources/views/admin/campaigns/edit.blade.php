@@ -13,6 +13,28 @@
                 <a href="{{ route('admin.dashboard') }}" class="text-sm text-slate-300 hover:text-white">Back to dashboard</a>
             </div>
 
+            <div class="mt-6 rounded-xl border border-white/10 bg-slate-950/40 p-4">
+                <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Share Link</p>
+                <div class="mt-3 flex flex-wrap items-center gap-3">
+                    <input
+                        id="share-link-admin"
+                        type="text"
+                        readonly
+                        value="{{ route('campaigns.share', $campaign->share_token) }}"
+                        class="flex-1 rounded-lg border border-white/10 bg-slate-900 px-3 py-2 text-xs text-slate-200"
+                    />
+                    <button
+                        type="button"
+                        data-copy-target="#share-link-admin"
+                        data-copy-label="Link copied"
+                        class="rounded-lg border border-emerald-400/40 bg-emerald-500/10 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-emerald-100 hover:bg-emerald-500/20"
+                    >
+                        Copy Link
+                    </button>
+                </div>
+                <p class="mt-2 text-xs text-slate-500">Share this short link with donors.</p>
+            </div>
+
             <form class="mt-6 space-y-4" method="post" action="{{ route('admin.campaigns.update', $campaign) }}" enctype="multipart/form-data">
                 @csrf
                 @method('put')

@@ -94,9 +94,18 @@
                             class="w-full rounded-lg bg-emerald-400 px-4 py-2 text-sm font-semibold uppercase tracking-wide text-slate-900 hover:bg-emerald-300 disabled:opacity-60"
                             {{ $campaign->isActive() ? '' : 'disabled' }}
                         >
-                            Submit Donation
+                            Submit Sedekah
                         </button>
                     </form>
+
+                    <button
+                        type="button"
+                        data-copy-value="{{ route('campaigns.share', $campaign->share_token) }}"
+                        data-copy-label="Link copied"
+                        class="mt-4 w-full rounded-lg border border-white/10 bg-slate-900 px-4 py-2 text-sm font-semibold uppercase tracking-wide text-slate-200 hover:bg-slate-800"
+                    >
+                        Share
+                    </button>
 
                     @if ($campaign->isAchieved())
                         <p class="mt-3 text-xs text-sky-200">Target achieved. This campaign is fulfilled.</p>

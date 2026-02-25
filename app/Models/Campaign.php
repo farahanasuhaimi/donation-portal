@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 class Campaign extends Model
 {
@@ -19,6 +20,7 @@ class Campaign extends Model
         'target_amount',
         'deadline',
         'qr_image',
+        'share_token',
         'archived_at',
         'archived_by_user_id',
     ];
@@ -72,5 +74,25 @@ class Campaign extends Model
     public function isArchived(): bool
     {
         return $this->archived_at !== null;
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (Campaign $campaign) {
+            if ($campaign->share_token) {
+                return;
+            }
+
+            $campaign->share_token = self::generateShareToken();
+        });
+    }
+
+    private static function generateShareToken(): string
+    {
+        do {
+            $token = Str::lower(Str::random(10));
+        } while (self::where('share_token', $token)->exists());
+
+        return $token;
     }
 }

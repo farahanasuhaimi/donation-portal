@@ -63,4 +63,13 @@ class CampaignController extends Controller
 
         return view('campaigns.show', compact('campaign', 'donations', 'donorTotal', 'donorName', 'donorAliasName', 'donorMobile'));
     }
+
+    public function showByToken(Request $request, string $token)
+    {
+        $campaign = Campaign::query()
+            ->where('share_token', $token)
+            ->firstOrFail();
+
+        return $this->show($request, $campaign);
+    }
 }

@@ -10,6 +10,7 @@ use App\Http\Controllers\DonationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [CampaignController::class, 'index'])->name('campaigns.index');
+Route::get('/c/{token}', [CampaignController::class, 'showByToken'])->name('campaigns.share');
 Route::get('/campaign/{campaign}', [CampaignController::class, 'show'])->name('campaigns.show');
 Route::post('/campaign/{campaign}/donate', [DonationController::class, 'store'])->name('campaigns.donate');
 
