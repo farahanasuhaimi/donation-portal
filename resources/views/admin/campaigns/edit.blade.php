@@ -10,7 +10,18 @@
                     <h1 class="text-2xl font-semibold">Edit Campaign</h1>
                     <p class="mt-2 text-sm text-slate-300">Update campaign details and QR image.</p>
                 </div>
-                <a href="{{ route('admin.dashboard') }}" class="text-sm text-slate-300 hover:text-white">Back to dashboard</a>
+                <div class="flex flex-wrap items-center gap-3">
+                    @if ($campaign->isArchived())
+                        <form method="post" action="{{ route('admin.campaigns.restore', $campaign) }}">
+                            @csrf
+                            @method('patch')
+                            <button type="submit" class="rounded-full border border-emerald-400/40 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-emerald-100 hover:bg-emerald-500/20">
+                                Restore Campaign
+                            </button>
+                        </form>
+                    @endif
+                    <a href="{{ route('admin.dashboard') }}" class="text-sm text-slate-300 hover:text-white">Back to dashboard</a>
+                </div>
             </div>
 
             <div class="mt-6 rounded-xl border border-white/10 bg-slate-950/40 p-4">

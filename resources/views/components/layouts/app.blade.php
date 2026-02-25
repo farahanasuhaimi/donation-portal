@@ -28,6 +28,9 @@
                             </form>
                         @elseif (auth()->check())
                             <span class="text-slate-400">Hi, {{ auth()->user()->name }}</span>
+                            @if (auth()->user()->role === 'donor')
+                                <a href="{{ route('donor.profile') }}" class="hover:text-white">My Sedekah</a>
+                            @endif
                             @if (auth()->user()->role === 'organizer')
                                 <a href="{{ route('admin.dashboard') }}" class="hover:text-white">Organizer Panel</a>
                             @endif

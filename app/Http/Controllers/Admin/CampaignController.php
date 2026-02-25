@@ -134,6 +134,25 @@ class CampaignController extends Controller
             ->with('status', 'Campaign moved to archive.');
     }
 
+    public function restore(Request $request, Campaign $campaign)
+    {
+        $this->authorizeCampaign($request, $campaign);
+
+        if (! $campaign->isArchived()) {
+            return redirect()
+                ->route('admin.dashboard')
+                ->with('status', 'Campaign is already active.');
+        }
+
+        $campaign->archived_at = null;
+        $campaign->archived_by_user_id = null;
+        $campaign->save();
+
+        return redirect()
+            ->route('admin.campaigns.edit', $campaign)
+            ->with('status', 'Campaign restored.');
+    }
+
     public function confirmDonation(Request $request, Campaign $campaign, Donation $donation)
     {
         $this->authorizeCampaign($request, $campaign);

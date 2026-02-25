@@ -1,7 +1,17 @@
 <x-layouts.app>
-    <div class="mb-10">
-        <h1 class="text-3xl font-semibold">Support Ramadan Campaigns</h1>
-        <p class="mt-2 text-slate-300">Browse community initiatives and pledge your donations.</p>
+    <div class="mb-10 flex flex-wrap items-start justify-between gap-4">
+        <div>
+            <h1 class="text-3xl font-semibold">Support Ramadan Campaigns</h1>
+            <p class="mt-2 text-slate-300">Browse community initiatives and pledge your donations.</p>
+        </div>
+        @if (auth()->check() && auth()->user()->role === 'organizer')
+            <a
+                href="{{ route('admin.dashboard') }}"
+                class="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-200 hover:bg-white/10"
+            >
+                My Campaigns
+            </a>
+        @endif
     </div>
 
     <div class="grid gap-6 md:grid-cols-2">

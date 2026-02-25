@@ -70,6 +70,14 @@
                                     Archive
                                 </button>
                             </form>
+                        @elseif (($role ?? null) === 'admin')
+                            <form method="post" action="{{ route('admin.campaigns.restore', $campaign) }}">
+                                @csrf
+                                @method('patch')
+                                <button type="submit" class="text-xs text-emerald-200 hover:text-emerald-100">
+                                    Restore
+                                </button>
+                            </form>
                         @endif
                     </div>
                 </div>
@@ -119,6 +127,14 @@
                                     @method('delete')
                                     <button type="submit" class="text-xs text-rose-200 hover:text-rose-100">
                                         Archive
+                                    </button>
+                                </form>
+                            @elseif (($role ?? null) === 'admin')
+                                <form method="post" action="{{ route('admin.campaigns.restore', $campaign) }}" class="mt-2">
+                                    @csrf
+                                    @method('patch')
+                                    <button type="submit" class="text-xs text-emerald-200 hover:text-emerald-100">
+                                        Restore
                                     </button>
                                 </form>
                             @endif

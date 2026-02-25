@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Auth\DonorAuthController;
 use App\Http\Controllers\Auth\DonorGoogleAuthController;
 use App\Http\Controllers\CampaignController;
+use App\Http\Controllers\DonorProfileController;
 use App\Http\Controllers\DonationController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,6 +14,9 @@ Route::get('/', [CampaignController::class, 'index'])->name('campaigns.index');
 Route::get('/c/{token}', [CampaignController::class, 'showByToken'])->name('campaigns.share');
 Route::get('/campaign/{campaign}', [CampaignController::class, 'show'])->name('campaigns.show');
 Route::post('/campaign/{campaign}/donate', [DonationController::class, 'store'])->name('campaigns.donate');
+Route::get('/donor/profile', [DonorProfileController::class, 'show'])
+    ->middleware('auth')
+    ->name('donor.profile');
 
 Route::get('/auth', [DonorAuthController::class, 'showAuth'])->name('auth.page');
 Route::get('/login', [DonorAuthController::class, 'showLogin'])->name('donor.login');
@@ -40,6 +44,7 @@ Route::middleware('admin')->prefix('admin')->name('admin.')->group(function () {
     Route::post('/campaign', [AdminCampaignController::class, 'store'])->name('campaigns.store');
     Route::get('/campaign/{campaign}/edit', [AdminCampaignController::class, 'edit'])->name('campaigns.edit');
     Route::put('/campaign/{campaign}', [AdminCampaignController::class, 'update'])->name('campaigns.update');
+    Route::patch('/campaign/{campaign}/restore', [AdminCampaignController::class, 'restore'])->name('campaigns.restore');
     Route::patch('/campaign/{campaign}/donations/{donation}', [AdminCampaignController::class, 'confirmDonation'])->name('campaigns.donations.confirm');
     Route::delete('/campaign/{campaign}', [AdminCampaignController::class, 'destroy'])->name('campaigns.destroy');
 });
