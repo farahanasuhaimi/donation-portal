@@ -35,13 +35,13 @@
                 <div class="rounded-xl border border-white/10 bg-slate-950/40 p-4">
                     <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Scan QR</p>
                     <img
-                        class="mt-4 w-full rounded-lg border border-white/10 bg-white p-2"
+                        class="mt-4 w-full rounded-lg border border-white/10 bg-white p-2 {{ ! $campaign->isActive() ? 'blur-sm opacity-50' : '' }}"
                         src="{{ \Illuminate\Support\Facades\Storage::url($campaign->qr_image) }}"
                         alt="QR for {{ $campaign->title }}"
                     />
                 </div>
                 <div class="rounded-xl border border-white/10 bg-slate-950/40 p-4">
-                    <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Donation Pledge</p>
+                    <p class="text-xs uppercase tracking-[0.2em] text-slate-400">Sedekah Pledge</p>
                     <form class="mt-4 space-y-4" method="post" action="{{ route('campaigns.donate', $campaign) }}">
                         @csrf
                         <div>
