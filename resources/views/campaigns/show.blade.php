@@ -13,7 +13,7 @@
                     <p class="mt-3 text-slate-300">{{ $campaign->description }}</p>
                 </div>
                 @if ($campaign->isAchieved())
-                    <span class="rounded-full bg-sky-500/20 px-3 py-1 text-xs text-sky-200">Achieved</span>
+                    <span class="rounded-full bg-sky-500/20 px-3 py-1 text-xs text-sky-200/50">Achieved</span>
                 @elseif ($campaign->isActive())
                     <span class="rounded-full bg-emerald-500/20 px-3 py-1 text-xs text-emerald-200">Active</span>
                 @else
@@ -132,6 +132,15 @@
                         <div>
                             <p class="font-medium">{{ $donation->donor_name }}</p>
                             <p class="text-xs text-slate-400">{{ $donation->created_at->format('d M Y, H:i') }}</p>
+                            @if ($donation->is_confirmed)
+                                <span class="mt-2 inline-flex items-center rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-200">
+                                    Confirmed
+                                </span>
+                            @else
+                                <span class="mt-2 inline-flex items-center rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-200">
+                                    Pending
+                                </span>
+                            @endif
                         </div>
                         <span class="text-emerald-200">RM {{ number_format($donation->amount, 2) }}</span>
                     </div>

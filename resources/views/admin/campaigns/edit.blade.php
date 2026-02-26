@@ -123,6 +123,19 @@
                         </div>
                         <div class="text-right">
                             <span class="text-emerald-200">RM {{ number_format($donation->amount, 2) }}</span>
+                            @if ($donation->is_confirmed)
+                                <div class="mt-2">
+                                    <span class="inline-flex items-center rounded-full bg-emerald-500/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald-200">
+                                        Confirmed
+                                    </span>
+                                </div>
+                            @else
+                                <div class="mt-2">
+                                    <span class="inline-flex items-center rounded-full bg-amber-500/20 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-amber-200">
+                                        Pending
+                                    </span>
+                                </div>
+                            @endif
                             @if (! $donation->is_confirmed)
                                 <div class="mt-2">
                                     <form method="post" action="{{ route('admin.campaigns.donations.confirm', [$campaign, $donation]) }}">

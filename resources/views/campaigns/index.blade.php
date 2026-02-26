@@ -2,7 +2,7 @@
     <div class="mb-10 flex flex-wrap items-start justify-between gap-4">
         <div>
             <h1 class="text-3xl font-semibold">Support Ramadan Campaigns</h1>
-            <p class="mt-2 text-slate-300">Browse community initiatives and pledge your donations.</p>
+            <p class="mt-2 font-semibold text-slate-200">Browse community initiatives and pledge your donations.</p>
         </div>
         @if (auth()->check() && auth()->user()->role === 'organizer')
             <a
@@ -25,10 +25,12 @@
                 <div class="flex items-start justify-between gap-4">
                     <div>
                         <h2 class="text-xl font-semibold">{{ $campaign->title }}</h2>
-                        <p class="mt-2 text-sm text-slate-300">{{ \Illuminate\Support\Str::limit($campaign->description, 140) }}</p>
+                        <p class="mt-2 text-sm font-semibold text-slate-200">{{ \Illuminate\Support\Str::limit($campaign->description, 140) }}</p>
                     </div>
                     @if ($campaign->isAchieved())
-                        <span class="rounded-full bg-sky-500/20 px-3 py-1 text-xs text-sky-200">Achieved</span>
+                        <span class="inline-flex items-center rounded-full border border-sky-300/60 bg-sky-500/35 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-sky-100/75 shadow-sm shadow-sky-500/30">
+                            Achieved
+                        </span>
                     @elseif ($campaign->isActive())
                         <span class="rounded-full bg-emerald-500/20 px-3 py-1 text-xs text-emerald-200">Active</span>
                     @else
@@ -52,7 +54,7 @@
                         href="{{ route('campaigns.show', $campaign) }}"
                         class="rounded-full bg-emerald-400 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-900 hover:bg-emerald-300"
                     >
-                        Sedekah
+                        Check Donater's List
                     </a>
                 </div>
             </div>
