@@ -16,11 +16,6 @@
 
     <div class="grid gap-6 md:grid-cols-2">
         @forelse ($campaigns as $campaign)
-            @php
-                $collected = (float) ($campaign->donations_sum_amount ?? 0);
-                $target = (float) $campaign->target_amount;
-                $progress = $target > 0 ? min(100, ($collected / $target) * 100) : 0;
-            @endphp
             <div class="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/20">
                 <div class="flex items-start justify-between gap-4">
                     <div>
@@ -40,11 +35,11 @@
 
                 <div class="mt-6">
                     <div class="h-2 w-full rounded-full bg-white/10">
-                        <div class="h-2 rounded-full bg-emerald-400" style="width: {{ $progress }}%"></div>
+                        <div class="h-2 rounded-full bg-emerald-400" style="width: {{ $campaign->progress }}%"></div>
                     </div>
                     <div class="mt-3 flex items-center justify-between text-sm text-slate-300">
-                        <span>Collected: RM {{ number_format($collected, 2) }}</span>
-                        <span>Target: RM {{ number_format($target, 2) }}</span>
+                        <span>Collected: RM {{ number_format($campaign->collected_amount, 2) }}</span>
+                        <span>Target: RM {{ number_format($campaign->target_amount, 2) }}</span>
                     </div>
                 </div>
 

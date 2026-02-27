@@ -50,22 +50,32 @@
                 @if (session('status'))
                     <div
                         id="flash-toast"
-                        data-timeout="4000"
-                        class="fixed right-6 top-6 z-50 w-[min(90vw,380px)] rounded-xl border border-emerald-400/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100 shadow-lg backdrop-blur transition duration-200"
+                        class="fixed left-1/2 top-8 z-[100] w-[min(90vw,420px)] -translate-x-1/2 overflow-hidden rounded-2xl border border-emerald-400/30 bg-slate-900/40 p-1 shadow-2xl backdrop-blur-xl transition-all duration-500 translate-y-[-20px] opacity-0"
                         role="status"
                     >
-                        <div class="flex items-start gap-3">
-                            <div class="mt-0.5 h-2.5 w-2.5 flex-none rounded-full bg-emerald-300"></div>
-                            <p class="flex-1">{{ session('status') }}</p>
-                            <button
-                                type="button"
-                                data-toast-close
-                                class="rounded-md px-2 py-1 text-xs text-emerald-100/80 hover:text-white"
-                                aria-label="Close notification"
-                            >
-                                Close
-                            </button>
+                        <div class="rounded-[14px] bg-gradient-to-br from-emerald-500/20 to-transparent px-5 py-4">
+                            <div class="flex items-center gap-4">
+                                <div class="flex h-10 w-10 flex-none items-center justify-center rounded-full bg-emerald-400/20 text-emerald-400 shadow-inner">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-xs font-semibold uppercase tracking-widest text-emerald-400/70">Success</p>
+                                    <p class="mt-0.5 text-sm font-medium text-emerald-50">{{ session('status') }}</p>
+                                </div>
+                                <button
+                                    type="button"
+                                    onclick="dismissToast()"
+                                    class="rounded-lg p-1 text-emerald-100/50 hover:bg-emerald-400/10 hover:text-white"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
+                        <div id="toast-progress" class="h-1 w-0 bg-emerald-400/40 transition-none"></div>
                     </div>
                 @endif
 
@@ -84,6 +94,44 @@
         </div>
 
         <script>
+            // Toast Management
+            function dismissToast() {
+                const toast = document.getElementById('flash-toast');
+                if (toast) {
+                    toast.classList.add('translate-y-[-20px]', 'opacity-0');
+                    setTimeout(() => toast.remove(), 500);
+                }
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                const toast = document.getElementById('flash-toast');
+                const progress = document.getElementById('toast-progress');
+                
+                if (toast) {
+                    // Entry Animation
+                    setTimeout(() => {
+                        toast.classList.remove('translate-y-[-20px]', 'opacity-0');
+                    }, 100);
+
+                    // Progress Bar & Auto-dismiss
+                    if (progress) {
+                        let width = 0;
+                        const interval = 10; // ms
+                        const duration = 4000; // ms
+                        const step = (interval / duration) * 100;
+
+                        const timer = setInterval(() => {
+                            width += step;
+                            progress.style.width = width + '%';
+                            if (width >= 100) {
+                                clearInterval(timer);
+                                dismissToast();
+                            }
+                        }, interval);
+                    }
+                }
+            });
+
             window.copyShareLink = async function (button) {
                 if (!button) return;
 

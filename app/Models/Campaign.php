@@ -46,6 +46,21 @@ class Campaign extends Model
         return $this->belongsTo(User::class, 'archived_by_user_id');
     }
 
+    public function getCollectedAmountAttribute(): float
+    {
+        return (float) ($this->donations_sum_amount ?? $this->donations()->sum('amount'));
+    }
+
+    public function getProgressAttribute(): float
+    {
+        $target = (float) $this->target_amount;
+        if ($target <= 0) {
+            return 0;
+        }
+
+        return min(100, ($this->collected_amount / $target) * 100);
+    }
+
     public function isActive(): bool
     {
         if ($this->isArchived()) {
