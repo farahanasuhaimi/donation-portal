@@ -1,10 +1,4 @@
 <x-layouts.app>
-    @php
-        $collected = (float) ($campaign->donations_sum_amount ?? 0);
-        $target = (float) $campaign->target_amount;
-        $progress = $target > 0 ? min(100, ($collected / $target) * 100) : 0;
-    @endphp
-
     <div class="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
         <div class="rounded-2xl border border-white/10 bg-white/5 p-8">
             <div class="flex flex-wrap items-center justify-between gap-4">
@@ -23,10 +17,10 @@
 
             <div class="mt-8">
                 <div class="h-2 w-full rounded-full bg-white/10">
-                    <div class="h-2 rounded-full bg-emerald-400" style="width: {{ $progress }}%"></div>
+                    <div class="h-2 rounded-full bg-emerald-400" style="width: {{ $campaign->progress }}%"></div>
                 </div>
                 <div class="mt-3 flex flex-wrap items-center justify-between gap-4 text-sm text-slate-300">
-                    <span>Raised RM {{ number_format($collected, 2) }} of RM {{ number_format($target, 2) }}</span>
+                    <span>Raised RM {{ number_format($campaign->collected_amount, 2) }} of RM {{ number_format($campaign->target_amount, 2) }}</span>
                     <span>Deadline: {{ $campaign->deadline->format('d M Y') }}</span>
                 </div>
             </div>

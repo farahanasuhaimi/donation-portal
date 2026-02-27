@@ -54,7 +54,7 @@
                         href="{{ route('campaigns.show', $campaign) }}"
                         class="rounded-full bg-emerald-400 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-slate-900 hover:bg-emerald-300"
                     >
-                        Check Donater's List
+                        {{ $campaign->isActive() ? 'Sedekah' : "Check Donater's List" }}
                     </a>
                 </div>
             </div>
